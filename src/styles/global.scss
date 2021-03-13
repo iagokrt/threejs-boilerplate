@@ -10,10 +10,17 @@ body {
 }
 
 body {
-    cursor: url('../public/ellipse.png'), pointer;
+    cursor: url('../../public/ellipse.png'), pointer;
 
     font-family: 'Helvetica Neue', Arial, sans-serif;
     font-size: 16px;
     background-color: rebeccapurple;
     color: #f1f1f1;
+}
+
+.webgl {
+    position: fixed;
+    top: 0;
+    left: 0;
+    outline: none;
 }
