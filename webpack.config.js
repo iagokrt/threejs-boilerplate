@@ -35,6 +35,11 @@ module.exports = {
                 use: ['style-loader', 'css-loader', 'sass-loader'],
             },
             { test: /\.png$/, use: 'url-loader?mimetype=image/png' },
+            {
+                test: /\.(glsl|vs|fs|vert|frag)$/,
+                exclude: /node_modules/,
+                use: ['raw-loader', 'glslify-loader'],
+            },
         ],
     },
 }
