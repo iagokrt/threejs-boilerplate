@@ -6,6 +6,8 @@ import * as dat from 'dat.gui'
 
 import './styles/global.scss'
 
+import txture from '../public/1.jpg'
+
 import vertex from './shader/vertexParticles.glsl'
 import fragment from './shader/fragment.glsl'
 
@@ -29,10 +31,10 @@ export default class Particled {
             70,
             window.innerWidth / window.innerHeight,
             0.001,
-            1000
+            5000
         )
 
-        this.camera.position.set(0, 0, 2)
+        this.camera.position.set(0, 0, 1500)
         this.controls = new OrbitControls(this.camera, this.renderer.domElement)
         this.time = 0
 
@@ -72,6 +74,10 @@ export default class Particled {
         this.material = new THREE.ShaderMaterial({
             uniforms: {
                 time: { type: 'f', value: 0 },
+                txture: {
+                    type: 't',
+                    value: new THREE.TextureLoader().load(txture),
+                },
                 resolution: { type: 'v4', value: new THREE.Vector4() },
                 uvRate1: {
                     value: new THREE.Vector2(1, 1),
@@ -81,7 +87,12 @@ export default class Particled {
             fragmentShader: fragment,
         })
 
-        this.geometry = new THREE.PlaneBufferGeometry(1, 1, 10, 10)
+        this.geometry = new THREE.PlaneBufferGeometry(
+            480 * 1.5,
+            820 * 1.5,
+            480,
+            820
+        )
 
         this.plane = new THREE.Points(this.geometry, this.material)
 
