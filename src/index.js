@@ -20,7 +20,7 @@ export default class Particled {
         this.renderer = new THREE.WebGLRenderer()
         this.renderer.setPixelRatio(window.devicePixelRatio)
         this.renderer.setSize(this.width, this.height)
-        this.renderer.setClearColor(0x000111, 1)
+        this.renderer.setClearColor(0x111111, 1)
         this.renderer.physicallyCorrectLights = true
 
         this.container.appendChild(this.renderer.domElement)
@@ -81,7 +81,7 @@ export default class Particled {
             fragmentShader: fragment,
         })
 
-        this.geometry = new THREE.PlaneBufferGeometry(1, 1, 1, 1)
+        this.geometry = new THREE.PlaneBufferGeometry(1, 1, 10, 10)
 
         this.plane = new THREE.Points(this.geometry, this.material)
 
