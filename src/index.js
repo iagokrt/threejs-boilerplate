@@ -6,7 +6,7 @@ import * as dat from 'dat.gui'
 
 import './styles/global.scss'
 
-import txture from '../public/1.jpg'
+import t from '../public/1.jpg'
 
 import vertex from './shader/vertexParticles.glsl'
 import fragment from './shader/fragment.glsl'
@@ -72,11 +72,14 @@ export default class Particled {
         let that = this
 
         this.material = new THREE.ShaderMaterial({
+            extensions: {
+                derivatives: '#extension GL_OES_standard_derivatives :enable',
+            },
             uniforms: {
                 time: { type: 'f', value: 0 },
-                txture: {
+                t: {
                     type: 't',
-                    value: new THREE.TextureLoader().load(txture),
+                    value: new THREE.TextureLoader().load(t),
                 },
                 resolution: { type: 'v4', value: new THREE.Vector4() },
                 uvRate1: {
