@@ -16,11 +16,15 @@ body {
     font-size: 16px;
     background-color: rebeccapurple;
     color: #f1f1f1;
+
+    overscroll-behavior: none;
 }
 
-.webgl {
-    position: fixed;
-    top: 0;
-    left: 0;
-    outline: none;
+#webgl {
+    width: 100vw;
+    height: 100vh;
+}
+
+canvas {
+    display: block;
 }
