@@ -8,6 +8,7 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 
 import * as dat from 'dat.gui';
+import gsap from 'gsap';
 
 import './styles/global.scss';
 
@@ -43,14 +44,8 @@ export default class Particled {
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.time = 0;
 
+    // video events (timeline)
     this.video = document.getElementById('video1');
-
-    this.video.addEventListener('ended', () => {
-      gsap.to(this.video, {
-        duration: 0.1,
-        opacity: 0,
-      });
-    });
 
     this.isPlaying = true;
 
@@ -61,6 +56,24 @@ export default class Particled {
     this.render();
     this.setupResize();
     this.settings();
+
+    this.video.addEventListener('ended', () => {
+      gsap.to(this.video, {
+        duration: 0.1,
+        opacity: 0,
+      });
+
+      gsap.to(this.material.uniforms.uDistortion, {
+        duration: 2,
+        value: 2.5,
+      });
+
+      gsap.to(this.material.uniforms.uDistortion, {
+        duration: 2,
+        value: 0,
+        delay: 2,
+      });
+    });
   }
 
   addPostProcessing() {
@@ -84,11 +97,11 @@ export default class Particled {
   settings() {
     let that = this;
     this.settings = {
-      distortion: 0,
+      // distortion: 0,
       bloomStrength: 0,
     };
     this.gui = new dat.GUI();
-    this.gui.add(this.settings, 'distortion', 0, 3, 0.01);
+    // this.gui.add(this.settings, 'distortion', 0, 3, 0.01);
     this.gui.add(this.settings, 'bloomStrength', 0, 10, 0.01);
   }
 
@@ -158,7 +171,7 @@ export default class Particled {
     this.time += 0.05;
 
     this.material.uniforms.time.value = this.time;
-    this.material.uniforms.uDistortion.value = this.settings.distortion;
+    // this.material.uniforms.uDistortion.value = this.settings.distortion;
     this.bloomPass.strength = this.settings.bloomStrength;
 
     requestAnimationFrame(this.render.bind(this));

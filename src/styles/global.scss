@@ -38,9 +38,9 @@ canvas {
   top: 0;
   left: 0;
   z-index: 1000;
-  opacity: 0.5;
-  border: 3px solid #fff;
   pointer-events: none;
+  // opacity: 0.5;
+  // border: 3px solid #fff;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
