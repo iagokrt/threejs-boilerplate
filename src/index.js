@@ -57,21 +57,42 @@ export default class Particled {
     this.setupResize();
     this.settings();
 
+    // right after video is ended starts the webgl magics!
     this.video.addEventListener('ended', () => {
+      // needing to remove the video using opacity. because video is right above of our canvas
       gsap.to(this.video, {
         duration: 0.1,
         opacity: 0,
       });
 
+      // starts the distortion animation
       gsap.to(this.material.uniforms.uDistortion, {
         duration: 2,
-        value: 2.5,
+        value: 3,
+        ease: 'power2.inOut',
       });
 
+      // starts the bloom animation
+      gsap.to(this.bloomPass, {
+        duration: 2,
+        strength: 7,
+        ease: 'power2.in',
+      });
+
+      // revert the init state distortion
       gsap.to(this.material.uniforms.uDistortion, {
         duration: 2,
         value: 0,
         delay: 2,
+        ease: 'power2.inOut',
+      });
+
+      // revert the init state bloom
+      gsap.to(this.bloomPass, {
+        duration: 2,
+        strength: 0,
+        delay: 2,
+        ease: 'power2.out',
       });
     });
   }
@@ -98,11 +119,11 @@ export default class Particled {
     let that = this;
     this.settings = {
       // distortion: 0,
-      bloomStrength: 0,
+      // bloomStrength: 0,
     };
     this.gui = new dat.GUI();
     // this.gui.add(this.settings, 'distortion', 0, 3, 0.01);
-    this.gui.add(this.settings, 'bloomStrength', 0, 10, 0.01);
+    // this.gui.add(this.settings, 'bloomStrength', 0, 10, 0.01);
   }
 
   setupResize() {
@@ -172,7 +193,7 @@ export default class Particled {
 
     this.material.uniforms.time.value = this.time;
     // this.material.uniforms.uDistortion.value = this.settings.distortion;
-    this.bloomPass.strength = this.settings.bloomStrength;
+    // this.bloomPass.strength = this.settings.bloomStrength;
 
     requestAnimationFrame(this.render.bind(this));
     // this.renderer.render(this.scene, this.camera);
