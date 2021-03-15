@@ -1,76 +1,104 @@
-import * as THREE from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 // import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js'
 
-import * as dat from 'dat.gui'
+// post-processing
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 
-import './styles/global.scss'
+import * as dat from 'dat.gui';
 
-import t from '../public/1.jpg'
+import './styles/global.scss';
 
-import vertex from './shader/vertexParticles.glsl'
-import fragment from './shader/fragment.glsl'
+import t from '../public/1.jpg';
+
+import vertex from './shader/vertexParticles.glsl';
+import fragment from './shader/fragment.glsl';
 
 export default class Particled {
   constructor(options) {
-    this.scene = new THREE.Scene()
+    this.scene = new THREE.Scene();
 
-    this.container = options.dom // document.getElementById('webgl')
-    this.width = this.container.offsetWidth
-    this.height = this.container.offsetHeight
+    this.container = options.dom; // document.getElementById('webgl')
+    this.width = this.container.offsetWidth;
+    this.height = this.container.offsetHeight;
 
-    this.renderer = new THREE.WebGLRenderer()
-    this.renderer.setPixelRatio(window.devicePixelRatio)
-    this.renderer.setSize(this.width, this.height)
-    this.renderer.setClearColor(0x000000, 1)
-    this.renderer.physicallyCorrectLights = true
+    this.renderer = new THREE.WebGLRenderer();
+    this.renderer.setPixelRatio(window.devicePixelRatio);
+    this.renderer.setSize(this.width, this.height);
+    this.renderer.setClearColor(0x000000, 1);
+    this.renderer.physicallyCorrectLights = true;
 
-    this.container.appendChild(this.renderer.domElement)
+    this.container.appendChild(this.renderer.domElement);
 
     this.camera = new THREE.PerspectiveCamera(
       70,
       window.innerWidth / window.innerHeight,
       0.001,
       5000
-    )
+    );
 
-    this.camera.position.set(0, 0, 1500)
-    this.controls = new OrbitControls(this.camera, this.renderer.domElement)
-    this.time = 0
+    this.camera.position.set(0, 0, 1500);
+    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+    this.time = 0;
 
-    this.isPlaying = true
+    this.isPlaying = true;
 
-    this.addObjects()
-    this.resize()
-    this.render()
-    this.setupResize()
-    this.settings()
+    this.addPostProcessing();
+
+    this.addObjects();
+    this.resize();
+    this.render();
+    this.setupResize();
+    this.settings();
+  }
+
+  addPostProcessing() {
+    this.renderScene = new RenderPass(this.scene, this.camera);
+
+    this.bloomPass = new UnrealBloomPass(
+      new THREE.Vector2(window.innerWidth, window.innerHeight),
+      1.5,
+      0.4,
+      0.85
+    );
+    this.bloomPass.threshold = this.settings.bloomThreshold;
+    this.bloomPass.strength = this.settings.bloomStrength;
+    this.bloomPass.radius = this.settings.bloomRadius;
+
+    this.composer = new EffectComposer(this.renderer);
+    this.composer.addPass(this.renderScene);
+    this.composer.addPass(this.bloomPass);
   }
 
   settings() {
-    let that = this
+    let that = this;
     this.settings = {
       distortion: 0,
-    }
-    this.gui = new dat.GUI()
-    this.gui.add(this.settings, 'distortion', 0, 3, 0.01)
+      bloomStrength: 0,
+    };
+    this.gui = new dat.GUI();
+    this.gui.add(this.settings, 'distortion', 0, 3, 0.01);
+    this.gui.add(this.settings, 'bloomStrength', 0, 10, 0.01);
   }
 
   setupResize() {
-    window.addEventListener('resize', this.resize.bind(this))
+    window.addEventListener('resize', this.resize.bind(this));
   }
 
   resize() {
-    this.width = this.container.offsetWidth
-    this.height = this.container.offsetHeight
-    this.renderer.setSize(this.width, this.height)
-    this.camera.aspect = this.width / this.height
+    this.width = this.container.offsetWidth;
+    this.height = this.container.offsetHeight;
+    this.renderer.setSize(this.width, this.height);
+    this.camera.aspect = this.width / this.height;
 
-    this.camera.updateProjectionMatrix()
+    this.camera.updateProjectionMatrix();
+    this.composer.setSize(this.width, this.height);
   }
 
   addObjects() {
-    let that = this
+    let that = this;
 
     this.material = new THREE.ShaderMaterial({
       extensions: {
@@ -90,44 +118,46 @@ export default class Particled {
       },
       vertexShader: vertex,
       fragmentShader: fragment,
-    })
+    });
 
     this.geometry = new THREE.PlaneBufferGeometry(
       480 * 1.5,
       820 * 1.5,
       480,
       820
-    )
+    );
 
-    this.plane = new THREE.Points(this.geometry, this.material)
+    this.plane = new THREE.Points(this.geometry, this.material);
 
-    this.scene.add(this.plane)
+    this.scene.add(this.plane);
   }
 
   stop() {
-    this.isPlaying = false
+    this.isPlaying = false;
   }
 
   play() {
     if (!this.isPlaying) {
-      this.render()
-      this.isPlaying = true
+      this.render();
+      this.isPlaying = true;
     }
   }
 
   render() {
-    if (!this.isPlaying) return
+    if (!this.isPlaying) return;
 
-    this.time += 0.05
+    this.time += 0.05;
 
-    this.material.uniforms.time.value = this.time
-    this.material.uniforms.uDistortion.value = this.settings.distortion
+    this.material.uniforms.time.value = this.time;
+    this.material.uniforms.uDistortion.value = this.settings.distortion;
+    this.bloomPass.strength = this.settings.bloomStrength;
 
-    requestAnimationFrame(this.render.bind(this))
-    this.renderer.render(this.scene, this.camera)
+    requestAnimationFrame(this.render.bind(this));
+    // this.renderer.render(this.scene, this.camera);
+    this.composer.render();
   }
 }
 
 new Particled({
   dom: document.getElementById('webgl'),
-})
+});
