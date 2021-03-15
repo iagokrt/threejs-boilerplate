@@ -121,8 +121,8 @@ export default class Particled {
     });
 
     this.geometry = new THREE.PlaneBufferGeometry(
-      480 * 1.5,
-      820 * 1.5,
+      480 * 1.72,
+      820 * 1.72,
       480,
       820
     );
