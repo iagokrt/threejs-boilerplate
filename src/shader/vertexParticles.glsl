@@ -89,6 +89,6 @@ void main() {
 
 
     vec4 mvPosition = modelViewMatrix * vec4( finalPosition, 1.);
-    gl_PointSize = 2.;
+    gl_PointSize = 10. * ( 1. / - mvPosition.z);
     gl_Position = projectionMatrix * mvPosition;
 }
