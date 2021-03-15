@@ -12,7 +12,10 @@ import gsap from 'gsap';
 
 import './styles/global.scss';
 
-import t from '../public/2.jpg';
+// import t from '../public/a-end.jpg'; // end frame of video : the texture that will be used itself with the fragment uniforms
+import t1 from '../public/a-start.jpg';
+import t from '../public/b-end.jpg';
+// import t1 from '../public/b-start.jpg';
 
 import vertex from './shader/vertexParticles.glsl';
 import fragment from './shader/fragment.glsl';
@@ -46,6 +49,7 @@ export default class Particled {
 
     // video events (timeline)
     this.video = document.getElementById('video1');
+    // this.video2 = document.getElementById('video2');
 
     this.isPlaying = true;
 
@@ -57,9 +61,9 @@ export default class Particled {
     this.setupResize();
     this.settings();
 
-    // right after video is ended starts the webgl magics!
+    // right after video is ended, starts the webgl animations!
     this.video.addEventListener('ended', () => {
-      // needing to remove the video using opacity. because video is right above of our canvas
+      // remove video opacity. because video element is over our canvas
       gsap.to(this.video, {
         duration: 0.1,
         opacity: 0,
@@ -70,6 +74,12 @@ export default class Particled {
         duration: 2,
         value: 3,
         ease: 'power2.inOut',
+      });
+
+      gsap.to(this.material.uniforms.progress, {
+        duration: 1,
+        delay: 1.5,
+        value: 1,
       });
 
       // starts the bloom animation
@@ -93,7 +103,22 @@ export default class Particled {
         strength: 0,
         delay: 2,
         ease: 'power2.out',
+        onComplete: () => {
+          this.video.currentTime * 0;
+          // fade-in video | loop
+          this.video.play();
+
+          gsap.to(this.video, {
+            duration: 0.1,
+            opacity: 1,
+          });
+        },
       });
+
+      // gsap.to(this.video2, {
+      //   duration: 0.1,
+      //   opacity: 1,
+      // });
     });
   }
 
@@ -149,10 +174,15 @@ export default class Particled {
       },
       uniforms: {
         time: { type: 'f', value: 0 },
+        progress: { type: 'f', value: 0 },
         uDistortion: { type: 'f', value: 0 },
         t: {
           type: 't',
           value: new THREE.TextureLoader().load(t),
+        },
+        t1: {
+          type: 't',
+          value: new THREE.TextureLoader().load(t1),
         },
         resolution: { type: 'v4', value: new THREE.Vector4() },
         uvRate1: {

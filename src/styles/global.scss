@@ -39,8 +39,6 @@ canvas {
   left: 0;
   z-index: 1000;
   pointer-events: none;
-  // opacity: 0.5;
-  // border: 3px solid #fff;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
@@ -49,5 +47,24 @@ canvas {
   height: 68.5vh;
 }
 .video video {
+  width: 100%;
+}
+
+.video2 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  pointer-events: none;
+  opacity: 0;
+  border: 3px solid #fff;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 40vh;
+  height: 68.5vh;
+}
+.video2 video {
   width: 100%;
 }
