@@ -11,7 +11,7 @@ import * as dat from 'dat.gui';
 
 import './styles/global.scss';
 
-import t from '../public/1.jpg';
+import t from '../public/2.jpg';
 
 import vertex from './shader/vertexParticles.glsl';
 import fragment from './shader/fragment.glsl';
@@ -42,6 +42,15 @@ export default class Particled {
     this.camera.position.set(0, 0, 1500);
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.time = 0;
+
+    this.video = document.getElementById('video1');
+
+    this.video.addEventListener('ended', () => {
+      gsap.to(this.video, {
+        duration: 0.1,
+        opacity: 0,
+      });
+    });
 
     this.isPlaying = true;
 
@@ -121,8 +130,8 @@ export default class Particled {
     });
 
     this.geometry = new THREE.PlaneBufferGeometry(
-      480 * 1.72,
-      820 * 1.72,
+      480 * 1.75,
+      820 * 1.75,
       480,
       820
     );
