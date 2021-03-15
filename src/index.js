@@ -44,16 +44,16 @@ export default class Particled {
     this.resize()
     this.render()
     this.setupResize()
-    // this.settings()
+    this.settings()
   }
 
   settings() {
     let that = this
-    // this.settings = {
-    //     distortion: 0,
-    // }
+    this.settings = {
+      distortion: 0,
+    }
     this.gui = new dat.GUI()
-    // this.gui.add(this.settings, 'distortion', 0, 3, 0.01)
+    this.gui.add(this.settings, 'distortion', 0, 3, 0.01)
   }
 
   setupResize() {
@@ -121,7 +121,7 @@ export default class Particled {
     this.time += 0.05
 
     this.material.uniforms.time.value = this.time
-    // this.material.uniforms.time.value = this.settings.distortion
+    this.material.uniforms.uDistortion.value = this.settings.distortion
 
     requestAnimationFrame(this.render.bind(this))
     this.renderer.render(this.scene, this.camera)
