@@ -13,8 +13,8 @@ import gsap from 'gsap';
 import './styles/global.scss';
 
 // import t from '../public/a-end.jpg'; // end frame of video : the texture that will be used itself with the fragment uniforms
-import t1 from '../public/a-start.jpg';
-import t from '../public/b-end.jpg';
+import t1 from '../public/design.jpg';
+import t from '../public/design.jpg';
 // import t1 from '../public/b-start.jpg';
 
 import vertex from './shader/vertexParticles.glsl';
@@ -31,7 +31,8 @@ export default class Particled {
     this.renderer = new THREE.WebGLRenderer();
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(this.width, this.height);
-    this.renderer.setClearColor(0x000000, 1);
+    // canvas rendered bgcolor
+    this.renderer.setClearColor(0x1b2725, 1);
     this.renderer.physicallyCorrectLights = true;
 
     this.container.appendChild(this.renderer.domElement);
@@ -62,64 +63,64 @@ export default class Particled {
     this.settings();
 
     // right after video is ended, starts the webgl animations!
-    this.video.addEventListener('ended', () => {
-      // remove video opacity. because video element is over our canvas
-      gsap.to(this.video, {
-        duration: 0.1,
-        opacity: 0,
-      });
+    // this.video.addEventListener('ended', () => {
+    //   // remove video opacity. because video element is over our canvas
+    //   gsap.to(this.video, {
+    //     duration: 0.1,
+    //     opacity: 0,
+    //   });
 
-      // starts the distortion animation
-      gsap.to(this.material.uniforms.uDistortion, {
-        duration: 2,
-        value: 3,
-        ease: 'power2.inOut',
-      });
+    //   // starts the distortion animation
+    //   gsap.to(this.material.uniforms.uDistortion, {
+    //     duration: 2,
+    //     value: 3,
+    //     ease: 'power2.inOut',
+    //   });
 
-      gsap.to(this.material.uniforms.progress, {
-        duration: 1,
-        delay: 1.5,
-        value: 1,
-      });
+    //   gsap.to(this.material.uniforms.progress, {
+    //     duration: 1,
+    //     delay: 1.5,
+    //     value: 1,
+    //   });
 
-      // starts the bloom animation
-      gsap.to(this.bloomPass, {
-        duration: 2,
-        strength: 7,
-        ease: 'power2.in',
-      });
+    //   // starts the bloom animation
+    //   gsap.to(this.bloomPass, {
+    //     duration: 2,
+    //     strength: 7,
+    //     ease: 'power2.in',
+    //   });
 
-      // revert the init state distortion
-      gsap.to(this.material.uniforms.uDistortion, {
-        duration: 2,
-        value: 0,
-        delay: 2,
-        ease: 'power2.inOut',
-      });
+    //   // revert the init state distortion
+    //   gsap.to(this.material.uniforms.uDistortion, {
+    //     duration: 2,
+    //     value: 0,
+    //     delay: 2,
+    //     ease: 'power2.inOut',
+    //   });
 
-      // revert the init state bloom
-      gsap.to(this.bloomPass, {
-        duration: 2,
-        strength: 0,
-        delay: 2,
-        ease: 'power2.out',
-        onComplete: () => {
-          this.video.currentTime * 0;
-          // fade-in video | loop
-          this.video.play();
+    //   // revert the init state bloom
+    //   gsap.to(this.bloomPass, {
+    //     duration: 2,
+    //     strength: 0,
+    //     delay: 2,
+    //     ease: 'power2.out',
+    //     onComplete: () => {
+    //       this.video.currentTime * 0;
+    //       // fade-in video | loop
+    //       this.video.play();
 
-          gsap.to(this.video, {
-            duration: 0.1,
-            opacity: 1,
-          });
-        },
-      });
+    //       gsap.to(this.video, {
+    //         duration: 0.1,
+    //         opacity: 1,
+    //       });
+    //     },
+    //   });
 
       // gsap.to(this.video2, {
       //   duration: 0.1,
       //   opacity: 1,
       // });
-    });
+    // });
   }
 
   addPostProcessing() {
@@ -143,12 +144,12 @@ export default class Particled {
   settings() {
     let that = this;
     this.settings = {
-      // distortion: 0,
-      // bloomStrength: 0,
+      distortion: 0,
+      bloomStrength: 0,
     };
     this.gui = new dat.GUI();
-    // this.gui.add(this.settings, 'distortion', 0, 3, 0.01);
-    // this.gui.add(this.settings, 'bloomStrength', 0, 10, 0.01);
+    this.gui.add(this.settings, 'distortion', 0, 3, 0.01);
+    this.gui.add(this.settings, 'bloomStrength', 0, 2.5, 0.01);
   }
 
   setupResize() {
@@ -222,8 +223,8 @@ export default class Particled {
     this.time += 0.05;
 
     this.material.uniforms.time.value = this.time;
-    // this.material.uniforms.uDistortion.value = this.settings.distortion;
-    // this.bloomPass.strength = this.settings.bloomStrength;
+    this.material.uniforms.uDistortion.value = this.settings.distortion;
+    this.bloomPass.strength = this.settings.bloomStrength;
 
     requestAnimationFrame(this.render.bind(this));
     // this.renderer.render(this.scene, this.camera);

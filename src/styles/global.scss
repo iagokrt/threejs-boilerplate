@@ -18,11 +18,15 @@ body {
 
   font-family: 'Helvetica Neue', Arial, sans-serif;
   font-size: 16px;
-  background-color: rebeccapurple;
-  color: #f1f1f1;
+  background-color: #1b2725;
+  color: white;
 
   overscroll-behavior: none;
 }
+
+  h2 {
+    color: #f1f1f1
+  }
 
 #webgl {
   width: 100vw;
@@ -43,6 +47,9 @@ canvas {
   top: 50%;
   transform: translate(-50%, -50%);
 
+  opacity: 0.0;
+
+  border: 1px #ff0000;
   width: 40vh;
   height: 68.5vh;
 }
