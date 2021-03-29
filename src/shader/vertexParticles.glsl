@@ -80,9 +80,9 @@ void main() {
     vUv = uv;
 
     vec3 distortion = vec3(position.x*2. , position.y, 1.) * curlNoise(vec3(
-    position.x*0.02 + time*0.,
-    position.y*0.08 + time*0.02,
-    (position.x + position.y)*0.02
+    position.x*0. + time*0.09,
+    position.y*0.06 + time*0.03,
+    (position.x + position.y)*0.0
     ))*uDistortion;
 
      vec3 finalPosition = position + distortion;
