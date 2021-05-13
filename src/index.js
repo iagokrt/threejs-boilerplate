@@ -150,6 +150,7 @@ export default class Particled {
     this.gui = new dat.GUI();
     this.gui.add(this.settings, 'distortion', 0, 3, 0.01);
     this.gui.add(this.settings, 'bloomStrength', 0, 2.5, 0.01);
+    this.gui.close()
   }
 
   setupResize() {

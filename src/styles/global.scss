@@ -75,3 +75,73 @@ canvas {
 .video2 video {
   width: 100%;
 }
+/* main content html overlay*/
+
+ul {
+  list-style: none;
+}
+a {
+  color: #f1f1f3;
+  text-decoration: none;
+}
+/* grid content */
+.content-overlay {
+  position: absolute;
+  padding: 20px;
+}
+.content-overlay {
+  h2 {
+    color: crimson;
+    text-align: center;
+  }
+}
+.flex-grid {
+  display: flex;
+}
+.flex-grid .col {
+  flex: 1;
+  background: repeating-linear-gradient(45deg, #000111, transparent 100px);
+  box-shadow: 1px 2px 8px palegreen;
+  padding: 14px 18px;
+  color: #f1f1f1;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  margin-left: 9px;
+  margin-right: 9px;
+  text-align: center;
+  line-height: 1.2rem;
+  transition: all 1s linear;
+}
+.flex-grid .col:hover {
+  // padding: 5px 18px;
+  transform: scale(1.02);
+  color: #f1f1fe;
+  background: repeating-linear-gradient(45deg, crimson, transparent 100px);
+}
+.flex-grid-thirds {
+  display: flex;
+  justify-content: space-between;
+}
+.flex-grid-thirds .col {
+  width: 32%;
+}
+
+@media (max-width: 400px) {
+  .flex-grid,
+  .flex-grid-thirds {
+    display: block;
+   
+  }
+  .flex-grid-thirds .col {
+    width: 100%;
+    margin: 0 0 10px 0;
+  }
+}
+
+.flex-grid { 
+  margin: 0 0 20px 0;
+}
+.col {
+  background: teal;
+  padding: 20px;
+}
